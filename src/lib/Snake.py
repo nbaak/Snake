@@ -20,7 +20,9 @@ class Snake:
             elif direction == 'd':
                 self.body.append((coordinates[0],coordinates[1]+i))
             else:
-                pass            
+                pass
+        
+        self.tail = self.body[-1]       
             
     def move_right(self):
         if self.direction != 'l':
