@@ -9,6 +9,7 @@ class Snake:
         self.body = []
         self.body.append(coordinates)
         self.grow = False
+        self.meals = 0
         
         for i in range(1,size+1):
             if direction == 'r':
@@ -42,6 +43,7 @@ class Snake:
          
     def eat(self):
         self.grow = True
+        self.meals += 1
             
     def update(self):
         old_body = self.body.copy()

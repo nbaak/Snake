@@ -36,6 +36,19 @@ class Test_Snake(unittest.TestCase):
         snake.eat()
         snake.update()
         self.assertTrue(snake.body == [(6,5),(5,5),(4,5),(3,5)], "snake grows")
+        self.assertTrue(snake.meals == 1, "snake had one meal")
         
+    def test_snake_self_intersect(self):
+        snake = Snake ((5,5),2, 'r')
+        snake.eat()
+        snake.update()
+        snake.move_up()
+        snake.update()
+        snake.move_left()
+        snake.update()
+        snake.move_down()
+        snake.update()
+        
+        self.assertTrue(snake.bite_self(), "snake bites it self")
         
          
