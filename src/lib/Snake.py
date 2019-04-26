@@ -12,13 +12,13 @@ class Snake:
         
         for i in range(1,size+1):
             if direction == 'r':
-                self.body.append((coordinates[0]+i,coordinates[1]))
-            elif direction == 'l':
                 self.body.append((coordinates[0]-i,coordinates[1]))
+            elif direction == 'l':
+                self.body.append((coordinates[0]+i,coordinates[1]))
             elif direction == 'u':
-                self.body.append((coordinates[0],coordinates[1]+i))
-            elif direction == 'd':
                 self.body.append((coordinates[0],coordinates[1]-i))
+            elif direction == 'd':
+                self.body.append((coordinates[0],coordinates[1]+i))
             else:
                 pass            
             
@@ -63,7 +63,7 @@ class Snake:
         
         if (self.grow):
             self.body.append(self.tail)
-            self.grow = false
+            self.grow = False
             
         self.tail = self.body[-1]
        
