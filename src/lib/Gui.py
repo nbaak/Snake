@@ -10,6 +10,8 @@ class Gui():
         self.width = field[2] * self.square_size
         self.height = field[3] * self.square_size
         
+        self.running = True
+        
         self.canvas = tkinter.Canvas(self.root, width=self.width, height=self.height)
         self.canvas.pack()
         
@@ -28,3 +30,9 @@ class Gui():
     
     def update_canvas(self):
         self.canvas.update()
+        
+    def bind(self, key, func):
+        self.root.bind(key, func)
+        
+    def stop(self):
+        self.running = False
