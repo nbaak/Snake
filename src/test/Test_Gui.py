@@ -19,10 +19,10 @@ def exit_game(event):
     #gui.root.destroy()
     
 square_size = 50
-field_size  = (0,0,30,30)
+field  = (0,0,30,30)
 
-game = Game(field_size)
-gui = Gui(field_size, square_size)
+game = Game(field)
+gui = Gui(field, square_size)
 gui.bind("q", exit_game)
 
 while gui.running:

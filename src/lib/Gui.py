@@ -36,3 +36,6 @@ class Gui():
         
     def stop(self):
         self.running = False
+        
+    def reset(self):
+        self.canvas.delete('all')

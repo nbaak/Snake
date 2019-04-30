@@ -2,6 +2,9 @@
 
 
 class Snake:
+    head_color = '#ff0000'
+    body_color = '#0000ff'
+    path_color = '#cfcfcf'
     
     def __init__(self, coordinates = (5,5), size = 2, direction = 'r'):
         self.head = coordinates
@@ -23,7 +26,8 @@ class Snake:
             else:
                 pass
         
-        self.tail = self.body[-1]       
+        self.tail = self.body[-1]
+        self.trail = None  
             
     def move_right(self):
         if self.direction != 'l':
@@ -47,16 +51,15 @@ class Snake:
             
     def update(self):
         old_body = self.body.copy()
-        old_head = self.head
         
         if self.direction == 'r':
             self.head = (self.head[0] +1, self.head[1])
         elif self.direction == 'l':
             self.head = (self.head[0] -1, self.head[1])
         elif self.direction == 'u':
-            self.head = (self.head[0]   , self.head[1] +1)
-        elif self.direction == 'u':
             self.head = (self.head[0]   , self.head[1] -1)
+        elif self.direction == 'd':
+            self.head = (self.head[0]   , self.head[1] +1)
         else:
             pass
         
@@ -69,11 +72,15 @@ class Snake:
             self.body.append(self.tail)
             self.grow = False
             
+        self.trail = self.tail
         self.tail = self.body[-1]
        
     def bite_self(self):
         return self.head in self.body[1:]
     
-    def draw(self):
-        pass
-      
+    def draw(self, gui):
+        for part in self.body[1:]:
+            gui.draw_square(self.body_color, part)
+            
+        gui.draw_square(self.path_color, self.trail)
+        gui.draw_square(self.head_color, self.head)
