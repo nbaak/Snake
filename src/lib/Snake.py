@@ -1,5 +1,7 @@
 
+from lib.Food import Food
 
+import math
 
 class Snake:
     head_color = '#ff0000'
@@ -13,6 +15,7 @@ class Snake:
         self.body.append(coordinates)
         self.grow = False
         self.meals = 0
+        self.food = None
         
         for i in range(1,size+1):
             if direction == 'r':
@@ -48,7 +51,38 @@ class Snake:
     def eat(self):
         self.grow = True
         self.meals += 1
+    
+    def eyes(self):
+        if self.direction == 'r':
+            front = (self.head[0] +1, self.head[1])
+            left  = (self.head[0], self.head[1] -1)
+            right = (self.head[0], self.head[1] +1)
             
+        elif self.direction == 'l':
+            front = (self.head[0] -1, self.head[1])
+            left  = (self.head[0], self.head[1] +1)
+            right = (self.head[0], self.head[1] -1)
+            
+        elif self.direction == 'u':
+            front = (self.head[0], self.head[1] -1)
+            left  = (self.head[0] -1, self.head[1])
+            right = (self.head[0] +1, self.head[1])
+            
+        elif self.direction == 'd':
+            front = (self.head[0], self.head[1] +1)
+            left  = (self.head[0] +1, self.head[1])
+            right = (self.head[0] -1, self.head[1])
+            
+        else:
+            pass
+        
+        return (not self.bite_self(left)  and self.is_in_field(left),
+                not self.bite_self(front) and self.is_in_field(front),
+                not self.bite_self(right) and self.is_in_field(right))
+        
+    def set_is_in_field(self, function):
+        self.is_in_field = function    
+    
     def update(self):
         old_body = self.body.copy()
         
@@ -74,9 +108,20 @@ class Snake:
             
         self.trail = self.tail
         self.tail = self.body[-1]
+        
+        print ("Head at: {}".format(self.head))
+        print ("Distanc to Food: {}".format(self._distance_to_food()))
+        print (self.eyes())
+        #print ("Eyes: l:{}, f:{}, r:{}".format(self.eyes()))
        
-    def bite_self(self):
-        return self.head in self.body[1:]
+    def sense_food(self, food = None):
+        self.food = food
+    
+    def bite_self(self, point = None):
+        if point:
+            return point in self.body[1:]
+        else:
+            return self.head in self.body[1:]
     
     def draw(self, gui):
         for part in self.body[1:]:
@@ -84,3 +129,9 @@ class Snake:
             
         gui.draw_square(self.path_color, self.trail)
         gui.draw_square(self.head_color, self.head)
+        
+    def _distance_to_food(self):
+        return math.sqrt((self.head[0]-self.food.position[0])*(self.head[0]-self.food.position[0])
+                       + (self.head[1]-self.food.position[1])*(self.head[1]-self.food.position[1]))
+        
+        

@@ -13,19 +13,35 @@ gui = Gui(field, 50)
 direction = 'r'
 
 def up(event):
-    game.snake.move_up()
+    game.direction = 'u'
 
 def down(event):
-    game.snake.move_down()
+    game.direction = 'd'
 
 def left(event):
-    game.snake.move_left()
-
+    game.direction = 'l'
+    
 def right(event):
-    game.snake.move_right()
+    game.direction = 'r'
 
 def quit_game(event):
     gui.running = False    
+
+def set_direction():
+    if game.direction == 'u':
+        game.snake.move_up()
+        
+    elif game.direction == 'd':
+        game.snake.move_down()
+        
+    elif game.direction == 'l':
+        game.snake.move_left()
+        
+    elif game.direction == 'r':
+        game.snake.move_right()
+        
+    else:
+        pass
     
 gui.bind('w', up)
 gui.bind('s', down)
@@ -39,7 +55,14 @@ while gui.running:
     game.new_food()
     
     while game.rules() and gui.running:
+        set_direction()
         game.update()
         game.draw(gui)
     
         time.sleep(0.5)
+        
+        
+        
+        
+        
+        
