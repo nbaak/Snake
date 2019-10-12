@@ -4,12 +4,13 @@ import time
 
 from lib.Gui import Gui
 from lib.Game import Game
+from lib.Pathfinder import Pathfinder
 
 field = (0, 0, 30, 30)
 
 game = Game(field)
 gui = Gui(field, 50)
-
+pf = Pathfinder(game)
 direction = 'r'
 
 def up(event):
@@ -57,8 +58,12 @@ while gui.running:
     while game.rules() and gui.running:
         set_direction()
         game.update()
+        
+        pf.predict()
+        pf.draw(gui)
+        
         game.draw(gui)
-    
+        
         time.sleep(0.5)
         
         

@@ -21,7 +21,7 @@ class Food:
             p = self._random_poimt((self.max_x, self.max_y))
             
         self.position = p
-        print ("Food at: {} ({},{})".format(self.position, self.max_x, self.max_y))
+        print ("Food at: {} || max:({},{})".format(self.position, self.max_x, self.max_y))
         #self.draw(gui)
         
     def draw(self, gui):
