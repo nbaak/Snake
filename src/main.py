@@ -59,6 +59,7 @@ while gui.running:
         set_direction()
         game.update()
         
+        pf.random_step()
         pf.predict()
         pf.draw(gui)
         

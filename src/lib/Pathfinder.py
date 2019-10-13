@@ -1,4 +1,5 @@
 import math
+import random
 
 class Pathfinder:
     
@@ -11,6 +12,13 @@ class Pathfinder:
         self.path = []
         self.old_path = None
         self.steps_done = 0
+        
+        # for randomization
+        self.directions = []
+        self.directions.append(Pathfinder._next_up)
+        self.directions.append(Pathfinder._next_down)
+        self.directions.append(Pathfinder._next_left)
+        self.directions.append(Pathfinder._next_right)
         
     def _update (self):
         self.snake = self.game.snake
@@ -26,11 +34,15 @@ class Pathfinder:
         self.path.clear()
         
         # do it
-        if self.solve_path(self.snake.head):
+        if self._solve_path(self.snake.head):
             pass
         else:
             self.path.clear()
         
+    def random_step(self):
+        func = random.choice(self.directions)
+        next = func(self.snake.head)
+        print ("random point: {}".format(next))
         
     def draw(self, gui):
         for p in self.old_path:
@@ -44,7 +56,23 @@ class Pathfinder:
         return math.sqrt((a[0]-b[0]) * (a[0]-b[0])
                         +(a[1]-b[1]) * (a[1]-b[1]))
     
-    def solve_path(self, current):
+    @staticmethod
+    def _next_up(current):
+        return (current[0]+0, current[1]-1)
+    
+    @staticmethod
+    def _next_down(current):
+        return (current[0]+0, current[1]+1)
+    
+    @staticmethod
+    def _next_left(current):
+        return (current[0]-1, current[1]-0)
+    
+    @staticmethod
+    def _next_right(current):
+        return (current[0]+1, current[1]+0)
+    
+    def _solve_path(self, current):
         if self.steps_done >= self.game.max_amount_of_steps:
             return False
         
@@ -55,10 +83,10 @@ class Pathfinder:
             return True
         
         directions = []
-        directions.append( (current[0] , current[1]-1) ) # up
-        directions.append( (current[0] , current[1]+1) ) # down
-        directions.append( (current[0]-1 , current[1]) ) # left
-        directions.append( (current[0]+1 , current[1]) ) # right
+        directions.append( Pathfinder._next_up(current) )    # up
+        directions.append( Pathfinder._next_down(current) )  # down
+        directions.append( Pathfinder._next_left(current) )  # left
+        directions.append( Pathfinder._next_right(current) ) # right
         
         # find closest 'next' point
         next_point_distances = []
@@ -75,7 +103,7 @@ class Pathfinder:
         next_point_distances.sort()
 
         for distance in next_point_distances:
-            if self.solve_path(next_points[distance]):
+            if self._solve_path(next_points[distance]):
                 return True
             else:
                 if len(self.path) >= 1:
