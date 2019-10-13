@@ -6,6 +6,7 @@ class Game():
     # x1,y1, x2, y2
     def __init__(self, field = (0, 0, 30, 30)):
         self.field = field
+        self.max_amount_of_steps = self.field[2] * self.field[3]
         self.snake = Snake()
         self.food = Food((7,5), 30, 30)
         self.direction = 'r'
@@ -56,3 +57,6 @@ class Game():
             return True
         else:
             return False
+        
+        
+        
