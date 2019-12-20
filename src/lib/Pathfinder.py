@@ -95,7 +95,7 @@ class Pathfinder:
         # go through all directions        
         for direction in directions:
             # add if possible        
-            if (self.game.check_field(direction)):
+            if (self.game.check_field(direction) and (direction not in self.path)):
                 distance = Pathfinder._distance_between(self.food, direction)
                 next_point_distances.append(distance)
                 next_points[distance] = direction
@@ -109,6 +109,7 @@ class Pathfinder:
                 if len(self.path) >= 1:
                     self.path.pop()
             
+        self.path.pop()
         return False
             
             
