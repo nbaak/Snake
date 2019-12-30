@@ -3,11 +3,10 @@ import random
 
 class Pathfinder:
     
-    def __init__(self, game):
-        self.game = game
-        self.snake = self.game.snake
-        self.food = self.game.food.position
-        self.field = game.field
+    def __init__(self, rules, current = None, target = None):
+        self.rules = rules
+        self.current_position = current
+        self.target_position = target
         
         self.path = []
         self.old_path = None
@@ -20,13 +19,12 @@ class Pathfinder:
         self.directions.append(Pathfinder._next_left)
         self.directions.append(Pathfinder._next_right)
         
-    def _update (self):
-        self.snake = self.game.snake
-        self.food = self.game.food.position
-        self.field = self.game.field
+    def _update (self, current, target):
+        self.current_position = current
+        self.target_position = target
         
-    def predict (self):
-        self._update()
+    def find_path (self, current, target):
+        self._update(current, target)
         
         # clear
         self.steps_done = 0
@@ -34,14 +32,18 @@ class Pathfinder:
         self.path.clear()
         
         # do it
-        if self._solve_path(self.snake.head):
-            pass
-        else:
+        try:
+            if self._solve_path(self.current_position):
+                pass
+            else:
+                self.path.clear()
+        except:
             self.path.clear()
+            print ("no possible path")
         
     def random_step(self):
         func = random.choice(self.directions)
-        next = func(self.snake.head)
+        next = func(self.current_position)
         print ("random point: {}".format(next))
         
     def draw(self, gui):
@@ -73,12 +75,12 @@ class Pathfinder:
         return (current[0]+1, current[1]+0)
     
     def _solve_path(self, current):
-        if self.steps_done >= self.game.max_amount_of_steps:
+        if self.steps_done >= self.rules.max_amount_of_steps:
             return False
         
         self.steps_done += 1
         self.path.append(current)
-        if (current == self.food):
+        if (current == self.target_position):
             #print ("found in: " + str(self.steps_done) + " steps")
             return True
         
@@ -95,8 +97,8 @@ class Pathfinder:
         # go through all directions        
         for direction in directions:
             # add if possible        
-            if (self.game.check_field(direction) and (direction not in self.path)):
-                distance = Pathfinder._distance_between(self.food, direction)
+            if (self.rules.check_field(direction) and (direction not in self.path)):
+                distance = Pathfinder._distance_between(self.target_position, direction)
                 next_point_distances.append(distance)
                 next_points[distance] = direction
                     

@@ -10,7 +10,7 @@ field = (0, 0, 30, 30)
 
 game = Game(field)
 gui = Gui(field, 50)
-pf = Pathfinder(game)
+pf = Pathfinder(game, game.snake.head, game.food.position)
 direction = 'r'
 
 def up(event):
@@ -59,8 +59,8 @@ while gui.running:
         set_direction()
         game.update()
         
-        pf.random_step()
-        pf.predict()
+        #pf.random_step()
+        pf.find_path(game.snake.head, game.food.position)
         pf.draw(gui)
         
         game.draw(gui)
