@@ -1,5 +1,6 @@
 
 from lib.Food import Food
+from lib.Direction import Direction
 
 import math
 
@@ -8,7 +9,7 @@ class Snake:
     body_color = '#0000ff'
     path_color = '#cfcfcf'
     
-    def __init__(self, coordinates = (5,5), size = 2, direction = 'r'):
+    def __init__(self, coordinates = (5,5), size = 2, direction = Direction.RIGHT):
         self.head = coordinates
         self.direction = direction
         self.body = []
@@ -18,13 +19,13 @@ class Snake:
         self.food = Food()
         
         for i in range(1,size+1):
-            if direction == 'r':
+            if direction == Direction.RIGHT:
                 self.body.append((coordinates[0]-i,coordinates[1]))
-            elif direction == 'l':
+            elif direction == Direction.LEFT:
                 self.body.append((coordinates[0]+i,coordinates[1]))
-            elif direction == 'u':
+            elif direction == Direction.UP:
                 self.body.append((coordinates[0],coordinates[1]-i))
-            elif direction == 'd':
+            elif direction == Direction.DOWN:
                 self.body.append((coordinates[0],coordinates[1]+i))
             else:
                 pass
@@ -33,42 +34,42 @@ class Snake:
         self.trail = None  
             
     def move_right(self):
-        if self.direction != 'l':
-            self.direction = 'r'
+        if self.direction != Direction.LEFT:
+            self.direction = Direction.RIGHT
             
     def move_left(self):
-        if self.direction != 'r':
-            self.direction = 'l'
+        if self.direction != Direction.RIGHT:
+            self.direction = Direction.LEFT
         
     def move_up(self):
-        if self.direction != 'd':
-            self.direction = 'u'
+        if self.direction != Direction.DOWN:
+            self.direction = Direction.UP
         
     def move_down(self):
-        if self.direction != 'u':
-            self.direction = 'd'
+        if self.direction != Direction.UP:
+            self.direction = Direction.DOWN
          
     def eat(self):
         self.grow = True
         self.meals += 1
     
     def eyes(self):
-        if self.direction == 'r':
+        if self.direction == Direction.RIGHT:
             front = (self.head[0] +1, self.head[1])
             left  = (self.head[0], self.head[1] -1)
             right = (self.head[0], self.head[1] +1)
             
-        elif self.direction == 'l':
+        elif self.direction == Direction.LEFT:
             front = (self.head[0] -1, self.head[1])
             left  = (self.head[0], self.head[1] +1)
             right = (self.head[0], self.head[1] -1)
             
-        elif self.direction == 'u':
+        elif self.direction == Direction.UP:
             front = (self.head[0], self.head[1] -1)
             left  = (self.head[0] -1, self.head[1])
             right = (self.head[0] +1, self.head[1])
             
-        elif self.direction == 'd':
+        elif self.direction == Direction.DOWN:
             front = (self.head[0], self.head[1] +1)
             left  = (self.head[0] +1, self.head[1])
             right = (self.head[0] -1, self.head[1])
@@ -86,16 +87,7 @@ class Snake:
     def update(self):
         old_body = self.body.copy()
         
-        if self.direction == 'r':
-            self.head = (self.head[0] +1, self.head[1])
-        elif self.direction == 'l':
-            self.head = (self.head[0] -1, self.head[1])
-        elif self.direction == 'u':
-            self.head = (self.head[0]   , self.head[1] -1)
-        elif self.direction == 'd':
-            self.head = (self.head[0]   , self.head[1] +1)
-        else:
-            pass
+        self._update_direction()
         
         # move body...
         self.body = []
@@ -111,8 +103,20 @@ class Snake:
         
         print ("Head at: {}".format(self.head))
         print ("Distanc to Food: {}".format(self.distance_to_food()))
-        print (self.eyes())
+        #print (self.eyes())
         #print ("Eyes: l:{}, f:{}, r:{}".format(self.eyes()))
+        
+    def _update_direction(self):        
+        if self.direction == Direction.RIGHT:
+            self.head = (self.head[0] +1, self.head[1])
+        elif self.direction == Direction.LEFT:
+            self.head = (self.head[0] -1, self.head[1])
+        elif self.direction == Direction.UP:
+            self.head = (self.head[0]   , self.head[1] -1)
+        elif self.direction == Direction.DOWN:
+            self.head = (self.head[0]   , self.head[1] +1)
+        else:
+            pass
        
     def sense_food(self, food = None):
         self.food = food

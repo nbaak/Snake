@@ -1,15 +1,18 @@
 from lib.Snake import Snake
 from lib.Food import Food
+from lib.Direction import Direction
 
 class Game():
     
     # x1,y1, x2, y2
     def __init__(self, field = (0, 0, 30, 30)):
         self.field = field
+        self.field_width = field[2]
+        self.field_height = field[3]
         self.max_amount_of_steps = self.field[2] * self.field[3]
         self.snake = Snake()
-        self.food = Food((7,5), 30, 30)
-        self.direction = 'r'
+        self.food = Food((7,5), self.field_width, self.field_height)
+        self._direction = Direction.RIGHT
         
     def new_snake(self):
         self.snake = Snake()
@@ -47,6 +50,29 @@ class Game():
         # starvation? 
         # tbd maybe
         return True
+    
+    @property
+    def direction(self):
+        return self._direction
+    
+    @direction.setter
+    def direction(self, direction):
+        self._direction = direction
+        if direction == Direction.UP:
+            self.snake.move_up()
+            
+        elif direction == Direction.LEFT:
+            self.snake.move_left()
+            
+        elif direction == Direction.DOWN:
+            self.snake.move_down()
+            
+        elif direction == Direction.RIGHT:
+            self.snake.move_right()
+            
+        else:
+            pass
+    
         
     def draw(self, gui):
         self.food.draw(gui)
@@ -58,5 +84,6 @@ class Game():
         else:
             return False
         
-        
-        
+    def get_score(self):
+        return self.snake.meals
+    

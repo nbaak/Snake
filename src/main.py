@@ -2,47 +2,32 @@
 
 import time
 
-from lib.Gui import Gui
+from gui.Gui import Gui
+from lib.Direction import Direction
 from lib.Game import Game
 from lib.Pathfinder import Pathfinder
 
-field = (0, 0, 30, 30)
+field = (0, 0, 30, 20)
 
 game = Game(field)
 gui = Gui(field, 50)
 pf = Pathfinder(game, game.snake.head, game.food.position)
-direction = 'r'
+direction = Direction.RIGHT
 
 def up(event):
-    game.direction = 'u'
+    game.direction = Direction.UP
 
 def down(event):
-    game.direction = 'd'
+    game.direction = Direction.DOWN
 
 def left(event):
-    game.direction = 'l'
+    game.direction = Direction.LEFT
     
 def right(event):
-    game.direction = 'r'
+    game.direction = Direction.RIGHT
 
 def quit_game(event):
     gui.running = False    
-
-def set_direction():
-    if game.direction == 'u':
-        game.snake.move_up()
-        
-    elif game.direction == 'd':
-        game.snake.move_down()
-        
-    elif game.direction == 'l':
-        game.snake.move_left()
-        
-    elif game.direction == 'r':
-        game.snake.move_right()
-        
-    else:
-        pass
     
 gui.bind('w', up)
 gui.bind('s', down)
@@ -56,7 +41,7 @@ while gui.running:
     game.new_food()
     
     while game.rules() and gui.running:
-        set_direction()
+        #set_direction()
         game.update()
         
         #pf.random_step()

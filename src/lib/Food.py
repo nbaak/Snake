@@ -12,13 +12,13 @@ class Food:
     def set_gui(self, gui):
         self.gui = gui
         
-    def _random_poimt(self, range = (30,30)):
-        return (random.randint(0, range[0]), random.randint(0, range[1]))
+    def _random_poimt(self):
+        return (random.randint(0, self.max_x), random.randint(0, self.max_y))
         
     def replace(self, snake):
-        p = self._random_poimt((self.max_x,self.max_y))
+        p = self._random_poimt()
         while p in snake.body:
-            p = self._random_poimt((self.max_x, self.max_y))
+            p = self._random_poimt()
             
         self.position = p
         #print ("Food at: {} || max:({},{})".format(self.position, self.max_x, self.max_y))
