@@ -13,6 +13,7 @@ class Game():
         self.snake = Snake()
         self.food = Food((7,5), self.field_width, self.field_height)
         self._direction = Direction.RIGHT
+        self.allow_movement = True
         
     def new_snake(self):
         self.snake = Snake()
@@ -30,6 +31,7 @@ class Game():
         
     def update(self):
         self.snake.update()
+        self.allow_movement = True
         
     def rules(self):
         # snake bites self
@@ -58,17 +60,22 @@ class Game():
     @direction.setter
     def direction(self, direction):
         self._direction = direction
-        if direction == Direction.UP:
-            self.snake.move_up()
-            
-        elif direction == Direction.LEFT:
-            self.snake.move_left()
-            
-        elif direction == Direction.DOWN:
-            self.snake.move_down()
-            
-        elif direction == Direction.RIGHT:
-            self.snake.move_right()
+        if self.allow_movement:
+            if direction == Direction.UP:
+                self.snake.move_up()
+                self.allow_movement = False
+                
+            elif direction == Direction.LEFT:
+                self.snake.move_left()
+                self.allow_movement = False
+                
+            elif direction == Direction.DOWN:
+                self.snake.move_down()
+                self.allow_movement = False
+                
+            elif direction == Direction.RIGHT:
+                self.snake.move_right()
+                
             
         else:
             pass
