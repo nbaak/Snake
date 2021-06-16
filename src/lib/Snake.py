@@ -77,12 +77,12 @@ class Snake:
         else:
             pass
         
-        return (not self.bite_self(left)  and self.field(left),
-                not self.bite_self(front) and self.field(front),
-                not self.bite_self(right) and self.field(right))
+        return (not self.bite_self(left)  and self.in_field(left),
+                not self.bite_self(front) and self.in_field(front),
+                not self.bite_self(right) and self.in_field(right))
         
     def set_is_in_field(self, function):
-        self.field = function    
+        self.in_field = function    
     
     def update(self):
         old_body = self.body.copy()
@@ -101,11 +101,12 @@ class Snake:
         self.trail = self.tail
         self.tail = self.body[-1]
         
-        print ("Head at: {}".format(self.head))
-        print ("Distanc to Food: {}".format(self.distance_to_food()))
+        #print ("Head at: {}".format(self.head))
+        #print ("Distance to Food: {}".format(self.distance_to_food()))
         #print (self.eyes())
         #print ("Eyes: l:{}, f:{}, r:{}".format(self.eyes()))
-        
+
+
     def _update_direction(self):        
         if self.direction == Direction.RIGHT:
             self.head = (self.head[0] +1, self.head[1])

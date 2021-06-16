@@ -1,10 +1,13 @@
 import math
 import random
 
+from lib.point_to_order import point_to_order
+from lib.Direction import Direction
+
 class Pathfinder:
     
-    def __init__(self, rules, current = None, target = None):
-        self.rules = rules
+    def __init__(self, game, current = None, target = None):
+        self.game = game
         self.current_position = current
         self.target_position = target
         
@@ -34,17 +37,54 @@ class Pathfinder:
         # do it
         try:
             if self._solve_path(self.current_position):
-                pass
+                self.path.pop(0)
             else:
                 self.path.clear()
         except:
             self.path.clear()
             print ("no possible path")
-        
+            
+    def get_next_step(self, current, target):
+        self.find_path(current, target)
+
+        if (len(self.path) > 0):
+            next = self.path[0]
+        else:
+            next = None 
+            
+        print (f"{current}:{next}")
+        return next
+    
     def random_step(self):
         func = random.choice(self.directions)
         next = func(self.current_position)
         print ("random point: {}".format(next))
+    
+    def follow(self, current_direction):
+        if len(self.path) > 0:
+            move = point_to_order(self.game.snake.head, self.path[0], current_direction)
+        
+        else:
+            dirs = [Direction.DOWN, Direction.LEFT, Direction.UP, Direction.RIGHT]
+            opposite = Direction.get_opposite_directuon(current_direction)
+            #print (f"currenct direction: {current_direction}")
+            #print (f"opposite direction: {opposite}")
+            dirs.remove(opposite)
+            #print (dirs)
+            move = random.choice(dirs)
+            
+            
+            eyes = self.game.snake.eyes()
+            print(eyes)
+            
+            # todo: get eyes from snake
+            # check if fields are possible, grab one possible 
+            
+            
+            print (current_direction, move)
+        
+        self.game.snake.direction = move
+    
         
     def draw(self, gui):
         for p in self.old_path:
@@ -75,7 +115,7 @@ class Pathfinder:
         return (current[0]+1, current[1]+0)
     
     def _solve_path(self, current):
-        if self.steps_done >= self.rules.max_amount_of_steps:
+        if self.steps_done >= self.game.max_amount_of_steps:
             return False
         
         self.steps_done += 1
@@ -97,7 +137,7 @@ class Pathfinder:
         # go through all directions        
         for direction in directions:
             # add if possible        
-            if (self.rules.check_field(direction) and (direction not in self.path)):
+            if (self.game.check_field(direction) and (direction not in self.path)):
                 distance = Pathfinder._distance_between(self.target_position, direction)
                 next_point_distances.append(distance)
                 next_points[distance] = direction

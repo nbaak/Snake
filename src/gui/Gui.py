@@ -7,8 +7,8 @@ class Gui():
         self.root = tkinter.Tk()
         self.square_size = square_size
         
-        self.width = (field[2] +1) * self.square_size
-        self.height = (field[3] +1) * self.square_size
+        self.width = (field[2]) * self.square_size
+        self.height = (field[3]) * self.square_size
         
         self.running = True
         

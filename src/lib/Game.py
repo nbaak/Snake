@@ -24,7 +24,7 @@ class Game():
         self.snake.sense_food(self.food)
         
     def point_is_in_field(self, point):
-        if point[0] >= self.field[0] and point[0] <= self.field[2] and point[1] >= self.field[1] and point[1] <= self.field[3]:
+        if point[0] >= self.field[0] and point[0] < self.field[2] and point[1] >= self.field[1] and point[1] < self.field[3]:
             return True        
         else:
             return False
@@ -33,10 +33,11 @@ class Game():
         self.snake.update()
         self.allow_movement = True
         
+        
     def rules(self):
         # snake bites self
         if self.snake.bite_self():
-            print ("snake died")
+            #print ("snake died")
             return False      
                 
         # snake eats

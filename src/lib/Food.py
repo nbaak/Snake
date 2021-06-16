@@ -13,7 +13,7 @@ class Food:
         self.gui = gui
         
     def _random_poimt(self):
-        return (random.randint(0, self.max_x), random.randint(0, self.max_y))
+        return (random.randint(0, self.max_x-1), random.randint(0, self.max_y-1))
         
     def replace(self, snake):
         p = self._random_poimt()

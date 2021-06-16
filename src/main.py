@@ -15,12 +15,13 @@ gui = Gui(field, 25)
 pf = Pathfinder(game, game.snake.head, game.food.position)
 direction = Direction.RIGHT
 
+game_paused = False
+
 def up(event):
     game.direction = Direction.UP
 
 def down(event):
     game.direction = Direction.DOWN
-    print (10*'############\n')
 
 def left(event):
     game.direction = Direction.LEFT
@@ -29,13 +30,24 @@ def right(event):
     game.direction = Direction.RIGHT
 
 def quit_game(event):
-    gui.running = False    
+    gui.running = False
+    
+def game_pause(event):
+    global game_paused
+    print ("toggle pause")
+    if game_paused:
+        game_paused = False
+    else:
+        game_paused = True
     
 gui.bind('w', up)
 gui.bind('s', down)
 gui.bind('a', left)
 gui.bind('d', right)
+
+gui.bind('p', game_pause)
 gui.bind('q', quit_game)
+
 
 async def main():
     while gui.running:
@@ -43,16 +55,19 @@ async def main():
         game.new_snake()
         game.new_food()
         
+        current_direction = Direction.RIGHT
+        
         while game.rules() and gui.running:
-            #set_direction()
             gui.update_loop()
-            game.update()
-            
-            #pf.random_step()
-            pf.find_path(game.snake.head, game.food.position)
-            pf.draw(gui)
-            
-            game.draw(gui)
+            if not game_paused:                
+                game.update()
+                
+                #pf.random_step()
+                next_point = pf.get_next_step(game.snake.head, game.food.position)            
+                pf.follow(game.snake.direction)            
+                pf.draw(gui)
+                
+                game.draw(gui)
             
             await asyncio.sleep(.2) # dunno it this is better than the old time.sleep()
         
