@@ -14,7 +14,7 @@ class Game():
         self.food = Food((7,5), self.field_width, self.field_height)
         self._direction = Direction.RIGHT
         self.allow_movement = True
-        
+ 
     def new_snake(self):
         self.snake = Snake()
         self.snake.set_is_in_field(self.point_is_in_field)
@@ -32,12 +32,10 @@ class Game():
     def update(self):
         self.snake.update()
         self.allow_movement = True
-        
-        
+                
     def rules(self):
         # snake bites self
         if self.snake.bite_self():
-            #print ("snake died")
             return False      
                 
         # snake eats
@@ -95,3 +93,6 @@ class Game():
     def get_score(self):
         return self.snake.meals
     
+    def reset(self):
+        self.new_food()
+        self.new_snake()

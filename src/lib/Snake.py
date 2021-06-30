@@ -52,33 +52,18 @@ class Snake:
     def eat(self):
         self.grow = True
         self.meals += 1
+        #print (f"score: {self.meals}")
     
-    def eyes(self):
-        if self.direction == Direction.RIGHT:
-            front = (self.head[0] +1, self.head[1])
-            left  = (self.head[0], self.head[1] -1)
-            right = (self.head[0], self.head[1] +1)
-            
-        elif self.direction == Direction.LEFT:
-            front = (self.head[0] -1, self.head[1])
-            left  = (self.head[0], self.head[1] +1)
-            right = (self.head[0], self.head[1] -1)
-            
-        elif self.direction == Direction.UP:
-            front = (self.head[0], self.head[1] -1)
-            left  = (self.head[0] -1, self.head[1])
-            right = (self.head[0] +1, self.head[1])
-            
-        elif self.direction == Direction.DOWN:
-            front = (self.head[0], self.head[1] +1)
-            left  = (self.head[0] +1, self.head[1])
-            right = (self.head[0] -1, self.head[1])
-            
-        else:
-            pass
+    def eyes(self):        
+        up    = (self.head[0],   self.head[1]-1)
+        left  = (self.head[0]-1, self.head[1])
+        down  = (self.head[0],  self.head[1]+1)
+        right = (self.head[0]+1, self.head[1])
         
-        return (not self.bite_self(left)  and self.in_field(left),
-                not self.bite_self(front) and self.in_field(front),
+        # up, left, down, right
+        return (not self.bite_self(up)  and self.in_field(up),
+                not self.bite_self(left) and self.in_field(left),
+                not self.bite_self(down) and self.in_field(down),
                 not self.bite_self(right) and self.in_field(right))
         
     def set_is_in_field(self, function):
@@ -100,12 +85,6 @@ class Snake:
             
         self.trail = self.tail
         self.tail = self.body[-1]
-        
-        #print ("Head at: {}".format(self.head))
-        #print ("Distance to Food: {}".format(self.distance_to_food()))
-        #print (self.eyes())
-        #print ("Eyes: l:{}, f:{}, r:{}".format(self.eyes()))
-
 
     def _update_direction(self):        
         if self.direction == Direction.RIGHT:

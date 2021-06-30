@@ -8,14 +8,17 @@ from lib.Direction import Direction
 from lib.Game import Game
 from lib.Pathfinder import Pathfinder
 
-field = (0, 0, 30, 20)
+field = (0, 0, 10, 7)
 
 game = Game(field)
 gui = Gui(field, 25)
 pf = Pathfinder(game, game.snake.head, game.food.position)
 direction = Direction.RIGHT
 
+
+# game states
 game_paused = False
+auto_pilot = False
 
 def up(event):
     game.direction = Direction.UP
@@ -39,6 +42,11 @@ def game_pause(event):
         game_paused = False
     else:
         game_paused = True
+  
+def toggle_auto_pilot(event):
+    global auto_pilot
+    auto_pilot = not auto_pilot
+    print(f"Auto Pilot is now {auto_pilot}")
     
 gui.bind('w', up)
 gui.bind('s', down)
@@ -47,7 +55,7 @@ gui.bind('d', right)
 
 gui.bind('p', game_pause)
 gui.bind('q', quit_game)
-
+gui.bind('e', toggle_auto_pilot)
 
 async def main():
     while gui.running:
@@ -63,8 +71,10 @@ async def main():
                 game.update()
                 
                 #pf.random_step()
-                next_point = pf.get_next_step(game.snake.head, game.food.position)            
-                pf.follow(game.snake.direction)            
+                next_point = pf.get_next_step(game.snake.head, game.food.position)
+                if auto_pilot:           
+                    pf.follow(game.snake.direction)
+                                
                 pf.draw(gui)
                 
                 game.draw(gui)

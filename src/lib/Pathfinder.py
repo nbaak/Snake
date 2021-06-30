@@ -65,25 +65,21 @@ class Pathfinder:
             move = point_to_order(self.game.snake.head, self.path[0], current_direction)
         
         else:
-            dirs = [Direction.DOWN, Direction.LEFT, Direction.UP, Direction.RIGHT]
-            opposite = Direction.get_opposite_directuon(current_direction)
-            #print (f"currenct direction: {current_direction}")
-            #print (f"opposite direction: {opposite}")
-            dirs.remove(opposite)
-            #print (dirs)
-            move = random.choice(dirs)
-            
-            
+            dirs = Direction.get_standard_directions()
             eyes = self.game.snake.eyes()
-            print(eyes)
             
-            # todo: get eyes from snake
-            # check if fields are possible, grab one possible 
+            for d, e in zip(Direction.get_standard_directions(), eyes):
+                if not e:
+                    dirs.remove(d)              
+            try:
+                move = random.choice(dirs)
+            except:
+                move = random.choice(Direction.get_standard_directions())
             
-            
-            print (current_direction, move)
         
+        print(move)
         self.game.snake.direction = move
+        return move
     
         
     def draw(self, gui):
@@ -150,6 +146,7 @@ class Pathfinder:
             else:
                 if len(self.path) >= 1:
                     self.path.pop()
+                    self.steps_done -= 1
             
         self.path.pop()
         return False

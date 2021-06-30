@@ -39,3 +39,6 @@ class Gui():
         
     def reset(self):
         self.canvas.delete('all')
+        
+    def destroy(self):
+        self.root.destroy()
