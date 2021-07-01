@@ -57,7 +57,7 @@ class TrainingEnvironment(object):
             done = True
         
         if not done:
-            reward = 5
+            reward = 1
         
         if score == 0 and done:
             reward = -200

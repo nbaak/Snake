@@ -7,6 +7,7 @@ from ai.DQNAgent import DQNAgent
 from ai.TrainingEnvironment import TrainingEnvironment
 
 from lib.Game import Game
+from tensorflow import keras
 
 EPISODES = 1_000 #20_000
 
@@ -36,14 +37,17 @@ def main():
     game = Game(field=(0,0,10,10))
     env = TrainingEnvironment(game)
     agent = DQNAgent(env)
+    try:
+        agent.model = keras.models.load_model(f"models/{MODEL_NAME}.model")
+    except:
+        print ("could not load model")
     
     for episode in range(1, EPISODES+1):
         episode_reward = 0
         step = 1
         
         current_state = env.reset()
-        done = False
-        
+        done = False        
         
         monitored_scores = []
         
@@ -69,6 +73,7 @@ def main():
                 monitored_scores.append(env.drawable_observation_matrix())
         
         if (MONITOR_SCORES and env.get_game_score() > 0) or (SHOW_PREVIEW and not episode % AGGREGATE_STATS_EVERY):
+            print(f"Episode: {episode}, Reward: {episode_reward}, Score: {env.get_game_score()}")
             replay_scores(monitored_scores, episode, env.get_game_score())
         
         if episode_reward > 1:
@@ -80,6 +85,7 @@ def main():
             max_reward = max(ep_rewards[-AGGREGATE_STATS_EVERY:])
             
             if min_reward > MIN_REWARD:
+                #print("save model")
                 agent.model.save(f"models/{MODEL_NAME}.model")
                 
         if epsilon > MIN_EPSILON:
