@@ -49,7 +49,7 @@ class TrainingEnvironment(object):
         if score == 0:
             self.steps_without_scoring += 1
         else:
-            reward = 50
+            reward = 100
             self.steps_without_scoring = 0
             
         if self.steps_without_scoring == 300:
@@ -57,7 +57,7 @@ class TrainingEnvironment(object):
             done = True
         
         if not done:
-            reward = 1
+            reward = 5
         
         if score == 0 and done:
             reward = -200

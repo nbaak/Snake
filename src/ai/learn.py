@@ -77,7 +77,7 @@ def main():
             replay_scores(monitored_scores, episode, env.get_game_score())
         
         if episode_reward > 1:
-            print(f"Episode: {episode}, Reward: {episode_reward}")
+            print(f"Episode: {episode}, Reward: {episode_reward}, Score: {env.get_game_score()}")
             
         ep_rewards.append(episode_reward)
         if not episode % AGGREGATE_STATS_EVERY == 0 or episode == 1:
