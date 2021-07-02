@@ -38,7 +38,7 @@ def main():
     env = TrainingEnvironment(game)
     agent = DQNAgent(env)
     try:
-        agent.model = keras.models.load_model(f"models/{MODEL_NAME}.model")
+        agent.model.load_model(f"models/{MODEL_NAME}.model")
     except:
         print ("could not load model")
     
@@ -86,7 +86,7 @@ def main():
             
             if min_reward > MIN_REWARD:
                 #print("save model")
-                agent.model.save(f"models/{MODEL_NAME}.model")
+                agent.save_model(f"models/{MODEL_NAME}.model")
                 
         if epsilon > MIN_EPSILON:
             epsilon *= EPSILON_DECAY

@@ -1,3 +1,5 @@
+
+from tensorflow import keras
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Conv2D, MaxPooling2D,  Activation, Flatten
 from keras.optimizer_v2.adam import Adam
@@ -52,6 +54,13 @@ class DQNAgent(object):
         model.compile(loss="mse", optimizer=Adam(learning_rate=.001), metrics=['accuracy'])
         
         return model
+    
+    def save_model(self, name = "Model"):
+        self.model.save(f"models/{name}.model")
+    
+    def load_model(self, name = "Model"):
+        self.model = keras.models.load_model(f"models/{name}.model")
+        self.target_model.set_weights(self.model.get_weights())    
     
     def update_replay_memory(self, transition):
         self.replay_memory.append(transition)
