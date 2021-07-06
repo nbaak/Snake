@@ -1,7 +1,6 @@
 
-from tensorflow import keras
-from keras.models import Sequential
-from keras.layers import Dense, Dropout, Conv2D, MaxPooling2D,  Activation, Flatten
+from keras.models import Sequential, load_model
+from keras.layers import Dense, Dropout, Conv2D, Dense, MaxPooling2D,  Activation, Flatten
 from keras.optimizer_v2.adam import Adam
 
 from collections import deque
@@ -39,27 +38,37 @@ class DQNAgent(object):
         model = Sequential()
         model.add(Conv2D(256, (3,3), input_shape=self.env.OBSERATION_SPACE_VALUES))
         model.add(Activation("relu"))
-        model.add(MaxPooling2D(2,2))
+        #model.add(MaxPooling2D(2,2))
         model.add(Dropout(.2))
         
         model.add(Conv2D(256, (3,3)))
         model.add(Activation("relu"))
-        model.add(MaxPooling2D(2,2))
+        #model.add(MaxPooling2D(2,2))
+        model.add(Dropout(.2))
+        
+        model.add(Conv2D(512, (3,3)))
+        model.add(Activation("relu"))
+        #model.add(MaxPooling2D(2,2))
+        model.add(Dropout(.2))
+        
+        model.add(Conv2D(256, (3,3)))
+        model.add(Activation("relu"))
+        #model.add(MaxPooling2D(2,2))
         model.add(Dropout(.2))
         
         model.add(Flatten())
-        model.add(Dense(65))
+        model.add(Dense(64))
         
         model.add(Dense(self.env.ACTION_SPACE_SIZE, activation="linear"))
         model.compile(loss="mse", optimizer=Adam(learning_rate=.001), metrics=['accuracy'])
         
         return model
     
-    def save_model(self, name = "Model"):
-        self.model.save(f"models/{name}.model")
+    def save_model(self, name = "Model.h5"):
+        self.model.save(f"{name}")
     
-    def load_model(self, name = "Model"):
-        self.model = keras.models.load_model(f"models/{name}.model")
+    def load_model(self, name = "Model.h5"):
+        self.model = load_model(f"{name}")
         self.target_model.set_weights(self.model.get_weights())    
     
     def update_replay_memory(self, transition):
@@ -78,7 +87,7 @@ class DQNAgent(object):
         current_qs_list = self.model.predict(current_stats)
         
         future_states = np.array([transition[3] for transition in minibatch])/255
-        future_qs_list = self.model.predict(future_states)
+        future_qs_list = self.target_model.predict(future_states)
         
         X = []
         y = []

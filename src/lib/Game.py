@@ -96,3 +96,7 @@ class Game():
     def reset(self):
         self.new_food()
         self.new_snake()
+        
+    def __str__(self):
+        return f"{self.food.position}, {self.snake.head}, {self.snake.direction}" 
+        

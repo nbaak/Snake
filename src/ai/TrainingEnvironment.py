@@ -34,13 +34,17 @@ class TrainingEnvironment(object):
         return self.game.get_score()
     
     def step(self, action):
+        reward = 0
+        
         score_before = self.get_game_score()
+        distance_before = self.game.snake.distance_to_food()
         
         self.game.direction = Direction(action)
         self.game.update()
         
         done = not self.game.rules()        
         score_after = self.get_game_score()
+        distance_after = self.game.snake.distance_to_food()
         
         observation = self.observation_matrix()
             
@@ -57,11 +61,25 @@ class TrainingEnvironment(object):
             done = True
         
         if not done:
-            reward = 5
+            # just movement
+            reward += -1
         
         if score == 0 and done:
-            reward = -200
+            # get killed
+            reward += -200
         
+        # maybe not a good idea..
+        if distance_after < distance_before:
+            # getting closer
+            reward += 0
+        
+        elif distance_after == distance_before:
+            # moving away
+            reward += 0
+            
+        else:
+            # holding distance
+            reward += 0
         
         return (observation, reward, done)
     
@@ -70,8 +88,15 @@ class TrainingEnvironment(object):
         img = img.resize((300,300))
         cv2.imshow(f"snake", np.array(img))
         cv2.waitKey(100)
-
+    
     def observation_matrix(self):
+        return self.__observation_matrix_1dim()    
+    
+    def preview_observation_matrix(self):
+        img = Image.fromarray(self.__observation_matrix_3dim(), 'RGB')
+        return img
+    
+    def __observation_matrix_1dim(self):
         observation = np.zeros((self.game.field_height+2, self.game.field_width+2, 1), dtype=np.uint8)
 
         #borders
@@ -85,20 +110,17 @@ class TrainingEnvironment(object):
         
         # snake body
         for row, col in self.game.snake.body[1:]:
-            observation[col+1, row+1, 0] = 1.0
+            observation[col+1, row+1, 0] = 2.0
             
         # snake head
-        observation[self.game.snake.head[1]+1, self.game.snake.head[0]+1, 0] = 1.0        
+        observation[self.game.snake.head[1]+1, self.game.snake.head[0]+1, 0] = 3.0        
             
         # food
-        observation[self.game.food.position[1]+1, self.game.food.position[0]+1, 0] = -1.0
-                        
-        #with np.printoptions(threshold=np.inf):
-        #    print(observation)
+        observation[self.game.food.position[1]+1, self.game.food.position[0]+1, 0] = 4.0
         
         return observation    
             
-    def drawable_observation_matrix(self):
+    def __observation_matrix_3dim(self):
         observation = np.full((self.game.field_height+2, self.game.field_width+2, 3), WHITE, dtype=np.uint8)
 
         #borders
@@ -122,8 +144,8 @@ class TrainingEnvironment(object):
                         
         #with np.printoptions(threshold=np.inf):
         #    print(observation)
-        img = Image.fromarray(observation, 'RGB')
-        return img
+        #img = Image.fromarray(observation, 'RGB')
+        return observation
         
         
         
