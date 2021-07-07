@@ -18,7 +18,7 @@ MIN_REWARD = -200
 MONITOR_SCORES = True        # log at all
 SHOW_PREVIEW = True          # show every N steps
 REPLAY = True   # replay the last round
-SAVE_REPLAY = True  # save replay as images
+SAVE_REPLAY = False  # save replay as images
 
 MONITOR_EVERY = 100
 
@@ -28,10 +28,14 @@ AGGREGATE_STATS_EVERY = 50
 MODEL_NAME = "snake_test_02"
 ep_rewards = [-200]
 
+# Image Scaling
+SCALE = 30
+
 
 def replay_scores(video, index = 0, scores = 0):
     for img in video:
-        img = img.resize((300,300))
+        width, height = img.size
+        img = img.resize((width*SCALE,height*SCALE))
         
         cv2.imshow(f"Replay {index} {scores}", np.array(img))
         cv2.waitKey(100)
@@ -46,7 +50,8 @@ def save_replay(video, episode = 0, scores = 0, reward = 0):
         os.makedirs(path)        
     
     for img in video:
-        img = img.resize((300,300))
+        width, height = img.size
+        img = img.resize((width*SCALE,height*SCALE))
         
         try:
             name = f"{index:09}.jpg"
@@ -62,9 +67,9 @@ def save_replay(video, episode = 0, scores = 0, reward = 0):
 
 def main():
     global epsilon
-    game = Game(field=(0,0,10,10))
+    game = Game(field=(0,0,10,7))
     env = TrainingEnvironment(game)
-    agent = DQNAgent(env)
+    agent = DQNAgent(env, 4)
     try:
         agent.load_model(f"models/{MODEL_NAME}.model")
     except Exception as e:

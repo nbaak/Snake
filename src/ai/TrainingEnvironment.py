@@ -23,6 +23,7 @@ class TrainingEnvironment(object):
         self.decay = decay
         
         self.OBSERATION_SPACE_VALUES = self.observation_matrix().shape
+        print ("OBS:", self.OBSERATION_SPACE_VALUES)
         self.ACTION_SPACE_SIZE = 4
               
     def reset(self):
