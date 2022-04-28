@@ -18,7 +18,7 @@ direction = Direction.RIGHT
 
 # game states
 game_paused = False
-auto_pilot = False
+auto_pilot = True
 
 def up(event):
     game.direction = Direction.UP
@@ -70,10 +70,10 @@ async def main():
             if not game_paused:                
                 game.update()
                 
-                #pf.random_step()
+                pf.random_step()
                 next_point = pf.get_next_step(game.snake.head, game.food.position)
-                if auto_pilot:           
-                    pf.follow(game.snake.direction)
+                if auto_pilot:                             
+                    pf.follow()
                                 
                 pf.draw(gui)
                 

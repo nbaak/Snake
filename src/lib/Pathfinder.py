@@ -1,7 +1,7 @@
 import math
 import random
 
-from lib.point_to_order import point_to_order
+from lib.point_to_direction import point_to_direction
 from lib.Direction import Direction
 
 class Pathfinder:
@@ -60,10 +60,10 @@ class Pathfinder:
         next = func(self.current_position)
         print ("random point: {}".format(next))
     
-    def follow(self, current_direction):
+    def follow(self):
         if len(self.path) > 0:
-            move = point_to_order(self.game.snake.head, self.path[0], current_direction)
-        
+            move = point_to_direction(self.game.snake.head, self.path[0])
+
         else:
             dirs = Direction.get_standard_directions()
             eyes = self.game.snake.eyes()

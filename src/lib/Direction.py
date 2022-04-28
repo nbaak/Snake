@@ -29,4 +29,8 @@ class Direction(Enum):
         else:
             return Direction.NONE
         
-        
+      
+      
+    
+if __name__ == "__main__":
+    print(Direction(0))  
