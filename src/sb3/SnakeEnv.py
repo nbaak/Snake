@@ -33,13 +33,14 @@ class SnakeEnv(gym.Env):
         obs = self.reset()
         n_channels = len(obs)
         max_value = max(self.game.field)
-        self.observation_space = spaces.Box(low=-max_value, high=max_value,
+        self.observation_space = spaces.Box(low=-500, high=500,
                                             shape=(n_channels,),
                                             dtype=np.int64)        
         
 
     def step(self, action):
-        self.prev_actions.append(action)
+        self.prev_actions.append([self.game.snake.head[0],self.game.snake.head[1]])
+        self.rounds_without_score += 1
         
         score_before = self.game.get_score()
         distance_before = self.game.snake.distance_to_food()
@@ -51,20 +52,33 @@ class SnakeEnv(gym.Env):
         score_after = self.game.get_score()
         distance_after = self.game.snake.distance_to_food()
         
-        apple_reward = 0
-        if score_after > score_before:
-            apple_reward = 10000 #+ 100*self.game.get_score()
-            self.rounds_without_score = 0
+        reward = 0
+        
+        # this is not a good idea..! it stays as a symbol!
+        if distance_after < distance_before:
+            reward += 0
+        else:
+            reward -= 0
             
-        total_reward = ((250 - self.snake.distance_to_food()) + apple_reward) / 100
+        if score_after > score_before:
+            reward = 100 #+ 100*self.game.get_score()
+            self.rounds_without_score = 0
+            #print("eat apple")
                 
-        reward = total_reward - abs(self.prev_reward)
-        self.prev_reward = total_reward
+        
+        # finalize        
+        self.prev_reward = reward
+                
+        # Statistics - Debug        
+        #print("###")
+        #print("distance to food:", self.game.snake.distance_to_food())
+        #print("head pos:", self.game.snake.head)
+        #print("food post:", self.game.food.position)    
+        #print("reward:", reward)
+        #print("###\n\n")
         
         if self.done:
             reward = -10
-        
-        self.rounds_without_score += 1
         
         observation = self.__observation()
         info = {}
@@ -78,12 +92,14 @@ class SnakeEnv(gym.Env):
         self.prev_reward = 0
         
         self.game.reset()
+        
         center_x = self.game.field_width // 2
         center_y = self.game.field_height // 2
         self.game.snake = Snake((center_x,center_y))
+        self.snake = self.game.snake
         
         for _ in range(SNAKE_LEN_GOAL):
-            self.prev_actions.append(-1)
+            self.prev_actions.append([-1,-1])
         
         observation = self.__observation()
                 
@@ -97,8 +113,9 @@ class SnakeEnv(gym.Env):
         d_x = food_x - head_x
         d_y = food_y- head_y
         
-        self.observation = list(self.game.snake.head) + [d_x, d_y] + [len(self.snake.body)] + list(self.prev_actions)
-        return np.array(self.observation)
+        observation = [[self.game.snake.head[0],self.game.snake.head[1]], [d_x, d_y], [len(self.snake.body),0]] + list(self.prev_actions)
+        #print(observation)
+        return np.array(observation).flatten()
     
     def render(self, mode='human', sleep=1):
         img = self.preview_observation_matrix()

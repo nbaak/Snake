@@ -15,7 +15,7 @@ obs = env.reset()
 print()
 print(f"observation: {obs} ({len(obs)})")
 
-print(f"class: {type(obs)}, data type: {obs.dtype}")
+print(f"class: {type(obs)}, data type: {obs.dtype}, shape: {obs.shape}")
 
 print("example step return")
 print(env.step(env.action_space.sample()))
@@ -30,7 +30,7 @@ for _ in range(2):
         env.render(sleep=100)
         action = env.action_space.sample()
         obs, reward, done, info = env.step(action)
-        print(reward, env.game.snake.head)
+        #print(reward, env.game.snake.head)
         
         
         

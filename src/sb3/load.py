@@ -10,7 +10,7 @@ from sb3.SnakeEnv import SnakeEnv
 from lib.Game import Game
 
 # Config
-SAVENAME  = "PPOv1" # should contain the algorithm
+SAVENAME  = "PPOv6" # should contain the algorithm
 SAVE_REPLAY = True
 
 if SAVE_REPLAY:
@@ -19,18 +19,17 @@ if SAVE_REPLAY:
 
     if not os.path.exists(SCREENSHOT_PATH):
         os.makedirs(SCREENSHOT_PATH)
-
-game = Game(field=(0,0,30,30))
+N = 20
+game = Game(field=(0,0,N,N))
 env = SnakeEnv(game)
 env.reset()
 
-model_file = "3820000"
+model_file = "2940000"
 models_dir = f"models/{SAVENAME}"
 model_path = f"{models_dir}/{model_file}"
 model = Algorithm.load(model_path, env=env)
 
 episodes = 50
-frames = []
 for ep in range(episodes):
     obs = env.reset()
     done = False
@@ -38,6 +37,7 @@ for ep in range(episodes):
     ep_score = 0
     score_before = 0
     score_after = 0
+    frames = []
     
     while not done:
         if SAVE_REPLAY:
@@ -50,7 +50,8 @@ for ep in range(episodes):
         obs, reward, done, info = env.step(action)
         
         score_after = env.game.get_score()
-        #print(score_before, score_after)
+        #print(score_before, score_after, reward)
+        
         if score_after > score_before:
             ep_score += 1
             print(f"{ep}-{ep_score} {reward}")
@@ -58,7 +59,8 @@ for ep in range(episodes):
         
     if ep_score >= 10:
         print("SAVE")
-        save_images_as_animation(frames, f"{SCREENSHOT_PATH}/{int(time.time())}-{model_file}-{ep}-{ep_score}.gif")
+        filename = f"{SCREENSHOT_PATH}/{int(time.time())}-{model_file}-{env.game.field_width}x{env.game.field_height}-{ep}-{ep_score}.gif"
+        save_images_as_animation(frames, filename)
         
         
         
