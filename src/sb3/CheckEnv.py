@@ -2,7 +2,8 @@ from stable_baselines3.common.env_checker import check_env
 from sb3.SnakeEnv import SnakeEnv
 from lib.Game import Game
 
-game = Game(field=(0,0,10,10))
+N = 200
+game = Game(field=(0,0,N,N))
 env = SnakeEnv(game)
 # It will check your custom environment and output additional warnings if needed
 
@@ -30,6 +31,7 @@ for _ in range(2):
         env.render(sleep=100)
         action = env.action_space.sample()
         obs, reward, done, info = env.step(action)
+        print(obs)
         #print(reward, env.game.snake.head)
         
         

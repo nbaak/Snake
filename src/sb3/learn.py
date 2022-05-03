@@ -8,21 +8,16 @@ from stable_baselines3 import PPO as Algorithm
 from sb3.SnakeEnv import SnakeEnv
 from lib.Game import Game
 
-
+from sb3.config import *
 
 # Config
-TIMESTEPS = 10_000  # save every n steps
+#TIMESTEPS = 10_000  # save every n steps
 
-SAVENAME  = "PPOv6" # should contain the algorithm
+SAVENAME = OUT_FILE_NAME
 
-models_dir = f"models/{SAVENAME}"
-logdir = "logs"
+models_dir = out_models_dir
 
-if not os.path.exists(models_dir):
-    os.makedirs(models_dir)
-    
-if not os.path.exists(logdir):
-    os.makedirs(logdir)
+ensure_dirs()
 
 game = Game(field=(0,0,20,20))
 env = SnakeEnv(game)

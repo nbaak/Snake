@@ -9,8 +9,10 @@ from stable_baselines3 import PPO as Algorithm
 from sb3.SnakeEnv import SnakeEnv
 from lib.Game import Game
 
+from sb3.config import *
+
 # Config
-SAVENAME  = "PPOv6" # should contain the algorithm
+SAVENAME  = IN_FILE_NAME
 SAVE_REPLAY = True
 
 if SAVE_REPLAY:
@@ -24,10 +26,7 @@ game = Game(field=(0,0,N,N))
 env = SnakeEnv(game)
 env.reset()
 
-model_file = "2940000"
-models_dir = f"models/{SAVENAME}"
-model_path = f"{models_dir}/{model_file}"
-model = Algorithm.load(model_path, env=env)
+model = Algorithm.load(in_model_path, env=env)
 
 episodes = 50
 for ep in range(episodes):
@@ -59,7 +58,7 @@ for ep in range(episodes):
         
     if ep_score >= 10:
         print("SAVE")
-        filename = f"{SCREENSHOT_PATH}/{int(time.time())}-{model_file}-{env.game.field_width}x{env.game.field_height}-{ep}-{ep_score}.gif"
+        filename = f"{SCREENSHOT_PATH}/{int(time.time())}-{in_model_file}-{env.game.field_width}x{env.game.field_height}-{ep}-{ep_score}.gif"
         save_images_as_animation(frames, filename)
         
         

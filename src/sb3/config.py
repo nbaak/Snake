@@ -4,12 +4,12 @@ import os
 TIMESTEPS = 10_000  # save every n steps
 
 # saving
-OUT_FILE_NAME  = "PPOv7" # should contain the algorithm
+OUT_FILE_NAME  = "PPOv8" # should contain the algorithm
 out_models_dir = f"models/{OUT_FILE_NAME}"
 
 # loading
-IN_FILE_NAME = "PPOv6"
-in_model_file = "2940000"
+IN_FILE_NAME = "PPOv8"
+in_model_file = "2810000"
 in_models_dir = f"models/{IN_FILE_NAME}"
 in_model_path = f"{in_models_dir}/{in_model_file}"
 
