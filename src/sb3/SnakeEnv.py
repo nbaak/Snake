@@ -117,11 +117,12 @@ class SnakeEnv(gym.Env):
         #print(observation)
         return np.array(observation).flatten()
     
-    def render(self, mode='human', sleep=1):
+    def render(self, mode='human', sleep=1, dont_show:bool=False):
         img = self.preview_observation_matrix()
         img = img.resize((300,300))
-        cv2.imshow(f"snake", np.array(img))
-        cv2.waitKey(sleep)
+        if not dont_show:
+            cv2.imshow(f"snake", np.array(img))
+            cv2.waitKey(sleep)
         return img
         
     def observation_matrix(self):
